@@ -1,5 +1,7 @@
 <div class="login-page clearfix">
   <header>
+    <img class="header__icon" src="/auth0.png" alt="" />
+
     {{#if session.isAuthenticated}}
       <h5>Hi, {{session.secure.profile.name}}</h5>
       <button class="btn btn-primary btn-lg btn-login btn-block" {{ action 'invalidateSession' }}>Sign out</button>

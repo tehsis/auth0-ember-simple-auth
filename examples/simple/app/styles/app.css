@@ -108,3 +108,8 @@ label {
 .login-page .login-box {
   padding: 100px 0;
 }
+
+.header__icon {
+  margin: 2rem;
+  width: 100px;
+}
