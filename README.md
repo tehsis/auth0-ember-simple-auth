@@ -107,7 +107,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
       // https://auth0.com/docs/libraries/lock/customization
 
       // These options will request a refresh token and launch lock.js in popup mode by default
-      var lockOptions = {authParams:{scope: 'openid offline_access'}};
+      var lockOptions = {authParams:{scope: 'openid'}};
 
       this.get('session').authenticate('simple-auth-authenticator:lock', lockOptions);
     }
@@ -229,7 +229,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
       // Check out the docs for all the options:
       // https://auth0.com/docs/libraries/lock/customization
 
-      var lockOptions = {authParams:{scope: 'openid offline_access'}};
+      var lockOptions = {authParams:{scope: 'openid'}};
       this.get('session').authenticate('simple-auth-authenticator:my-dope-authenticator', lockOptions);
     }
   }
