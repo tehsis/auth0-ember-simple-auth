@@ -1,5 +1,7 @@
 /* jshint node: true */
 
+var auth0Config = require('./auth0-variables');
+
 module.exports = function(environment) {
   var ENV = {
     modulePrefix: 'simple',
@@ -50,8 +52,8 @@ module.exports = function(environment) {
   }
 
   ENV['simple-lock'] = {
-    clientID: "BUIJSW9x60sIHBw8Kd9EmCbj8eDIFxDC",
-    domain: "samples.auth0.com"
+    clientID: auth0Config.AUTH0_CLIENT_ID,
+    domain: auth0Config.AUTH0_DOMAIN
   }
 
   ENV['contentSecurityPolicy'] = {
