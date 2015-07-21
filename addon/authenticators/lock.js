@@ -205,9 +205,9 @@ export default Base.extend({
   },
 
   invalidate: function(/* data */) {
+    var self = this;
     if(this.get('hasRefreshToken')){
       var url = 'https://'+this.get('domain')+'/api/users/'+this.get('userID')+'/refresh_tokens/'+this.get('refreshToken');
-      var self = this;
       return this._makeAuth0Request(url, "DELETE").then(function(){
         return self.beforeExpire();
       });
