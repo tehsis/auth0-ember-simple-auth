@@ -1,3 +1,4 @@
+/* globals Auth0Lock, b64utos, KJUR */
 import Ember from 'ember';
 import Base from 'simple-auth/authenticators/base';
 
