@@ -1,3 +1,3 @@
 module.exports = {
-  description: 'Create a new authorizer based on simple-lock'
+  description: 'Create a new authenticator based on auth0-ember-simple-auth'
 };

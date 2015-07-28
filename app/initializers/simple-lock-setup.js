@@ -1,7 +1,7 @@
-import Authenticator from 'simple-lock/authenticators/lock';
+import Authenticator from 'auth0-ember-simple-auth/authenticators/lock';
 
 export default {
-  name:         'simple-lock-setup',
+  name:         'auth0-ember-simple-auth-setup',
   before:       'simple-auth',
   initialize: function(registry, application) {
     application.register('simple-auth-authenticator:lock', Authenticator);

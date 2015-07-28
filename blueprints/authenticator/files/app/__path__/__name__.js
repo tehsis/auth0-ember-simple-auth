@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import Base from 'simple-lock/authenticators/lock';
+import Base from 'auth0-ember-simple-auth/authenticators/lock';
 
 export default Base.extend({
 
