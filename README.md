@@ -28,7 +28,7 @@ ember install auth0-ember-simple-auth
 If you want to get up and running right away, you can scaffold all the necessary routes with to play with:
 
 ```bash
-ember generate scaffold-lock
+ember generate scaffold-auth0
 ```
 
 ### Configuration
@@ -55,7 +55,7 @@ ENV['auth0-ember-simple-auth'] = {
 }
 ```
 
-__At this point if you ran *scaffold-lock*, you can fire up ember server:__
+__At this point if you ran *scaffold-auth0*, you can fire up ember server:__
 
 ```bash
 ember server --port
@@ -130,18 +130,18 @@ __Then from your template you could trigger the usual actions:__
 
 ### Custom Authenticators
 
-You can easily extend the __Simple Lock__ base __authenticator__ to play hooky with some cool __hooks__.
+You can easily extend the __Auth0EmberSimpleAuth__ base __authenticator__ to play hooky with some cool __hooks__.
 
 Here's how:
 
 ```bash
-ember generate authenticator my-dope-authenticator
+ember generate authenticator my-cool-authenticator
 ```
 
 This will create the following stub authenticator:
 
 ```js
-// app/authenticators/my-dope-authenticator.js
+// app/authenticators/my-cool-authenticator.js
 
 import Base from 'auth0-ember-simple-auth/authenticators/lock';
 
@@ -231,7 +231,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
       // https://auth0.com/docs/libraries/lock/customization
 
       var lockOptions = {authParams:{scope: 'openid'}};
-      this.get('session').authenticate('simple-auth-authenticator:my-dope-authenticator', lockOptions);
+      this.get('session').authenticate('authenticator:my-cool-authenticator', lockOptions);
     }
   }
 });
@@ -240,7 +240,51 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
 
 ### Custom Authorizers
 
-TODO
+You can easily extend the __EmberSimpleAuth__ base __authorizer__ to create custom authorization logic.
+
+Here's how:
+
+```bash
+ember generate authorizer my-cool-authenticator
+```
+
+This will generate the following authorizer.
+
+```js
+// app/authorizers/my-cool-authorizer.js
+
+import Ember from 'ember';
+import Base from 'simple-auth/authorizers/base';
+
+export default Base.extend({
+  authorize: function(jqXHR, requestOptions) {
+
+    var secureData = this.get('session.secure');
+
+    if (this.get('session.isAuthenticated') && !Ember.isEmpty(secureData.jwt)) {
+      // Set request headers here.
+      // secureData.jwt is the jwt from Auth0.
+      // 
+      // jqXHR.setRequestHeader('Authorization', 'Bearer ' + secureData.jwt);
+
+    }
+
+  }
+});
+
+```
+
+To use the new authorizer, just update your config as follows:
+
+```js
+// config/environment.js
+ENV['simple-auth'] = {
+  ...
+  authorizer: 'authenticator:my-cool-authenticator',
+  ...
+}
+
+```
 
 ## Credits
 
