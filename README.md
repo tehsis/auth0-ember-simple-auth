@@ -43,12 +43,13 @@ There are two configuration options.
 ```js
 // config/environment.js
 ENV['simple-auth'] = {
+  authorizer: 'simple-auth-authorizer:jwt',
   authenticationRoute: 'index',
   routeAfterAuthentication: 'protected',
   routeIfAlreadyAuthenticated: 'protected'
 }
 
-ENV['simple-lock'] = {
+ENV['auth0-ember-simple-auth'] = {
   clientID: "auth0_client_id",
   domain: "auth0_domain"
 }
@@ -86,7 +87,7 @@ ENV['contentSecurityPolicy'] = {
 
 ## Manual Setup
 
-__auth0-ember-simple-auth__ is just a regular __authorizer__ that conforms to the [Ember Simple Auth](https://github.com/simplabs/ember-simple-auth) interface. Please follow the docs to get everything working as usual, and just add the call to the *simple-auth-authenticator:lock* __authorizer__ in your ```authenticate``` call.
+__auth0-ember-simple-auth__ is just a regular __authenticator__ that conforms to the [Ember Simple Auth](https://github.com/simplabs/ember-simple-auth) interface. Please follow the docs to get everything working as usual, and just add the call to the *simple-auth-authenticator:lock* __authenticator__ in your ```authenticate``` call.
 
 ### Actions
 
@@ -142,7 +143,7 @@ This will create the following stub authenticator:
 ```js
 // app/authenticators/my-dope-authenticator.js
 
-import Base from 'simple-lock/authenticators/lock';
+import Base from 'auth0-ember-simple-auth/authenticators/lock';
 
 export default Base.extend({
 
@@ -236,6 +237,11 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
 });
 
 ```
+
+### Custom Authorizers
+
+TODO
+
 ## Credits
 
 Written by @brancusi (Aram Zadikian), maintained in part by Auth0. Thanks Aram!
