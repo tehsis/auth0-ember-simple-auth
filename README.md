@@ -280,7 +280,7 @@ To use the new authorizer, just update your config as follows:
 // config/environment.js
 ENV['simple-auth'] = {
   ...
-  authorizer: 'authenticator:my-cool-authenticator',
+  authorizer: 'authorizer:my-cool-authenticator',
   ...
 }
 
