@@ -245,7 +245,7 @@ You can easily extend the __EmberSimpleAuth__ base __authorizer__ to create cust
 Here's how:
 
 ```bash
-ember generate authorizer my-cool-authenticator
+ember generate authorizer my-cool-authorizer
 ```
 
 This will generate the following authorizer.
@@ -280,11 +280,13 @@ To use the new authorizer, just update your config as follows:
 // config/environment.js
 ENV['simple-auth'] = {
   ...
-  authorizer: 'authorizer:my-cool-authenticator',
+  authorizer: 'authorizer:my-cool-authorizer',
   ...
 }
 
 ```
+
+Remember, you will also need to update your crossOriginWhitelist if you are making cross domain requests. If not, ember simple auth will not trigger the authorizer's ```authorize``` method.
 
 ## Credits
 
