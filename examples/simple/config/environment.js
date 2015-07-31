@@ -51,7 +51,7 @@ module.exports = function(environment) {
     routeIfAlreadyAuthenticated: 'protected'
   }
 
-  ENV['simple-lock'] = {
+  ENV['auth0-ember-simple-auth'] = {
     clientID: auth0Config.AUTH0_CLIENT_ID,
     domain: auth0Config.AUTH0_DOMAIN
   }

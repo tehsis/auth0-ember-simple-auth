@@ -2,7 +2,7 @@
 'use strict';
 
 module.exports = {
-  name: 'simple-lock',
+  name: 'auth0-ember-simple-auth',
 
   included: function(app) {
     app.import(app.bowerDirectory + '/ember-simple-auth/simple-auth.amd.js');
@@ -11,7 +11,7 @@ module.exports = {
   },
 
   isDevelopingAddon: function() {
-    return true;
+    return false;
   }
 
 }

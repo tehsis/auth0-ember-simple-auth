@@ -28,7 +28,7 @@ ember install auth0-ember-simple-auth
 If you want to get up and running right away, you can scaffold all the necessary routes with to play with:
 
 ```bash
-ember generate scaffold-lock
+ember generate scaffold-auth0
 ```
 
 ### Configuration
@@ -43,18 +43,19 @@ There are two configuration options.
 ```js
 // config/environment.js
 ENV['simple-auth'] = {
+  authorizer: 'simple-auth-authorizer:jwt',
   authenticationRoute: 'index',
   routeAfterAuthentication: 'protected',
   routeIfAlreadyAuthenticated: 'protected'
 }
 
-ENV['simple-lock'] = {
+ENV['auth0-ember-simple-auth'] = {
   clientID: "auth0_client_id",
   domain: "auth0_domain"
 }
 ```
 
-__At this point if you ran *scaffold-lock*, you can fire up ember server:__
+__At this point if you ran *scaffold-auth0*, you can fire up ember server:__
 
 ```bash
 ember server --port
@@ -86,7 +87,7 @@ ENV['contentSecurityPolicy'] = {
 
 ## Manual Setup
 
-__auth0-ember-simple-auth__ is just a regular __authorizer__ that conforms to the [Ember Simple Auth](https://github.com/simplabs/ember-simple-auth) interface. Please follow the docs to get everything working as usual, and just add the call to the *simple-auth-authenticator:lock* __authorizer__ in your ```authenticate``` call.
+__auth0-ember-simple-auth__ is just a regular __authenticator__ that conforms to the [Ember Simple Auth](https://github.com/simplabs/ember-simple-auth) interface. Please follow the docs to get everything working as usual, and just add the call to the *simple-auth-authenticator:lock* __authenticator__ in your ```authenticate``` call.
 
 ### Actions
 
@@ -129,20 +130,20 @@ __Then from your template you could trigger the usual actions:__
 
 ### Custom Authenticators
 
-You can easily extend the __Simple Lock__ base __authenticator__ to play hooky with some cool __hooks__.
+You can easily extend the __Auth0EmberSimpleAuth__ base __authenticator__ to play hooky with some cool __hooks__.
 
 Here's how:
 
 ```bash
-ember generate authenticator my-dope-authenticator
+ember generate authenticator my-cool-authenticator
 ```
 
 This will create the following stub authenticator:
 
 ```js
-// app/authenticators/my-dope-authenticator.js
+// app/authenticators/my-cool-authenticator.js
 
-import Base from 'simple-lock/authenticators/lock';
+import Base from 'auth0-ember-simple-auth/authenticators/lock';
 
 export default Base.extend({
 
@@ -230,12 +231,63 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
       // https://auth0.com/docs/libraries/lock/customization
 
       var lockOptions = {authParams:{scope: 'openid'}};
-      this.get('session').authenticate('simple-auth-authenticator:my-dope-authenticator', lockOptions);
+      this.get('session').authenticate('authenticator:my-cool-authenticator', lockOptions);
     }
   }
 });
 
 ```
+
+### Custom Authorizers
+
+You can easily extend the __EmberSimpleAuth__ base __authorizer__ to create custom authorization logic.
+
+Here's how:
+
+```bash
+ember generate authorizer my-cool-authorizer
+```
+
+This will generate the following authorizer.
+
+```js
+// app/authorizers/my-cool-authorizer.js
+
+import Ember from 'ember';
+import Base from 'simple-auth/authorizers/base';
+
+export default Base.extend({
+  authorize: function(jqXHR, requestOptions) {
+
+    var secureData = this.get('session.secure');
+
+    if (this.get('session.isAuthenticated') && !Ember.isEmpty(secureData.jwt)) {
+      // Set request headers here.
+      // secureData.jwt is the jwt from Auth0.
+      // 
+      // jqXHR.setRequestHeader('Authorization', 'Bearer ' + secureData.jwt);
+
+    }
+
+  }
+});
+
+```
+
+To use the new authorizer, just update your config as follows:
+
+```js
+// config/environment.js
+ENV['simple-auth'] = {
+  ...
+  authorizer: 'authorizer:my-cool-authorizer',
+  ...
+}
+
+```
+
+Remember, you will also need to update your crossOriginWhitelist if you are making cross domain requests. If not, ember simple auth will not trigger the authorizer's ```authorize``` method.
+
 ## Credits
 
 Written by @brancusi (Aram Zadikian), maintained in part by Auth0. Thanks Aram!

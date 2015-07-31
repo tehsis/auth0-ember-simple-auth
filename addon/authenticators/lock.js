@@ -19,7 +19,7 @@ export default Base.extend({
 
   /**
    * The env config found in the environment config.
-   * ENV['simple-lock']
+   * ENV['auth0-ember-simple-auth']
    * 
    * @type {Object}
    */
@@ -223,7 +223,7 @@ export default Base.extend({
   init: function() {
     var applicationConfig = this.container.lookupFactory('config:environment');
 
-    var config = applicationConfig['simple-lock'];
+    var config = applicationConfig['auth0-ember-simple-auth'];
     this.set('_config', config);
 
     this.set('_sessionData', Ember.Object.create());
