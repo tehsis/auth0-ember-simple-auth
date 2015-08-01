@@ -25,7 +25,7 @@ cd hello-safe-world
 ember install auth0-ember-simple-auth
 ```
 
-If you want to get up and running right away, you can scaffold all the necessary routes with to play with:
+If you want to get up and running right away, you can scaffold all the necessary routes and templates to play with:
 
 ```bash
 ember generate scaffold-auth0
@@ -55,10 +55,13 @@ ENV['auth0-ember-simple-auth'] = {
 }
 ```
 
+Lastly, make sure you update the *Allowed Callback URLs* through your Auth0 dashboard.
+*If running ember locally on the default port, this will be: __http://localhost:4200__*
+
 __At this point if you ran *scaffold-auth0*, you can fire up ember server:__
 
 ```bash
-ember server --port
+ember server
 ```
 __The below steps will outline the steps to get up and running with the scaffolding:__
 
