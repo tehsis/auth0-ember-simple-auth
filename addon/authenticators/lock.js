@@ -6,11 +6,11 @@ var read = Ember.computed.readOnly;
 var bool = Ember.computed.bool;
 
 export default Base.extend({
-  
+
   //=======================
   // Properties
   //=======================
-  
+
   /**
    * The session data
    * @type {Ember Object}
@@ -20,7 +20,7 @@ export default Base.extend({
   /**
    * The env config found in the environment config.
    * ENV['auth0-ember-simple-auth']
-   * 
+   *
    * @type {Object}
    */
   config: read('_config'),
@@ -30,13 +30,13 @@ export default Base.extend({
    * @type {Auth0Lock}
    */
   lock: read('_lock'),
-  
+
   /**
    * The Auth0 App ClientID found in your Auth0 dashboard
    * @type {String}
    */
   clientID: read('_clientID'),
-  
+
   /**
    * The Auth0 App Domain found in your Auth0 dashboard
    * @type {String}
@@ -96,7 +96,7 @@ export default Base.extend({
   //=======================
   // Hooks
   //=======================
-  
+
   /**
    * Hook that gets called after the jwt has expired
    * but before we notify the rest of the system.
@@ -105,7 +105,7 @@ export default Base.extend({
    *
    * IMPORTANT: You must return a promise, else logout
    * will not continue.
-   * 
+   *
    * @return {Promise}
    */
   beforeExpire: function(){
@@ -119,9 +119,9 @@ export default Base.extend({
    * services, custom db, firebase, etc. then
    * decorate the session object and pass it along.
    *
-   * IMPORTANT: You must return a promise with the 
+   * IMPORTANT: You must return a promise with the
    * session data.
-   * 
+   *
    * @param  {Object} data Session object
    * @return {Promise}     Promise with decorated session object
    */
@@ -136,9 +136,9 @@ export default Base.extend({
    * This only fires if lock.js was passed in
    * the offline_mode scope params
    *
-   * IMPORTANT: You must return a promise with the 
+   * IMPORTANT: You must return a promise with the
    * session data.
-   * 
+   *
    * @param  {Object} data The new jwt
    * @return {Promise}     The decorated session object
    */
@@ -149,14 +149,14 @@ export default Base.extend({
   /**
    * Hook that gets called after Auth0 successfully
    * refreshes the jwt if (refresh token is enabled).
-   * 
+   *
    * Great place to make additional calls to other
    * services, custom db, firebase, etc. then
    * decorate the session object and pass it along.
    *
-   * IMPORTANT: You must return a promise with the 
+   * IMPORTANT: You must return a promise with the
    * session data.
-   * 
+   *
    * @param  {Object} data Session object
    * @return {Promise}     Promise with decorated session object
    */
@@ -198,7 +198,7 @@ export default Base.extend({
 
           self.afterAuth(sessionData)
           .then(function(response){
-            resolve(self._setupFutureEvents(response));  
+            resolve(self._setupFutureEvents(response));
           });
         }
       });
@@ -262,7 +262,7 @@ export default Base.extend({
 
   _scheduleRefresh: function(){
     Ember.run.cancel(this.get('_refreshJob'));
-    
+
     var remaining = this._jwtRemainingTime();
     var earlyRefresh = 30;
     var refreshInSecond = (remaining < (earlyRefresh*2)) ? remaining/2 : remaining - earlyRefresh;
@@ -270,7 +270,7 @@ export default Base.extend({
 
     if(!isNaN(refreshInMilli) && refreshInMilli >= 50){
       var job = Ember.run.later(this, this._refreshAccessToken, refreshInMilli);
-      this.set('_refreshJob', job);  
+      this.set('_refreshJob', job);
     }
   },
 
@@ -303,7 +303,7 @@ export default Base.extend({
         }else{
           self.afterRefresh({jwt:result.id_token})
           .then(function(response){
-            resolve(self._setupFutureEvents(response));  
+            resolve(self._setupFutureEvents(response));
           });
         }
       });
@@ -331,7 +331,7 @@ export default Base.extend({
       return 0;
     }else{
       var currentTime = (new Date().getTime()/1000);
-      return this.get('expiresIn') - currentTime;  
+      return this.get('expiresIn') - currentTime;
     }
   }
 
