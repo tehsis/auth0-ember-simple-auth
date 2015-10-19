@@ -1,6 +1,6 @@
 /* globals Auth0Lock, b64utos, KJUR */
 import Ember from 'ember';
-import Base from 'simple-auth/authenticators/base';
+import BaseAuthenticator from 'ember-simple-auth/authenticators/base';
 
 var read = Ember.computed.readOnly;
 var bool = Ember.computed.bool;
