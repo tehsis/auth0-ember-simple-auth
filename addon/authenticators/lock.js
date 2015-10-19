@@ -5,7 +5,7 @@ import BaseAuthenticator from 'ember-simple-auth/authenticators/base';
 var read = Ember.computed.readOnly;
 var bool = Ember.computed.bool;
 
-export default Base.extend({
+export default BaseAuthenticator.extend({
 
   //=======================
   // Properties

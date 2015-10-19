@@ -1,7 +1,7 @@
 import Ember from 'ember';
-import Base from 'ember-simple-auth/authorizers/base';
+import BaseAuthorizer from 'ember-simple-auth/authorizers/base';
 
-export default Base.extend({
+export default BaseAuthorizer.extend({
 
   authorize: function(jqXHR /*, requestOptions */) {
     var secureData = this.get('session.secure');
