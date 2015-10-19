@@ -11,7 +11,7 @@ module.exports = {
       path: options.path
     });
   }
-  
+
 };
 
 function addRouteToRouter(options) {
@@ -19,7 +19,9 @@ function addRouteToRouter(options) {
   var source = fs.readFileSync(routerPath, 'utf-8');
 
   var routes = new EmberRouterGenerator(source);
-  var newRoutes = routes.add('protected', options);
+  var protectedRoute = routes.add('protected', options);
+  var loginRoute = routes.add('protected', options);
 
-  fs.writeFileSync(routerPath, newRoutes.code());
+  fs.writeFileSync(protectedRoute, newRoutes.code());
+  fs.writeFileSync(loginRoute, newRoutes.code());
 }
