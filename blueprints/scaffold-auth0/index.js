@@ -22,6 +22,6 @@ function addRouteToRouter(options) {
   var protectedRoute = routes.add('protected', options);
   var loginRoute = routes.add('protected', options);
 
-  fs.writeFileSync(protectedRoute, newRoutes.code());
-  fs.writeFileSync(loginRoute, newRoutes.code());
+  fs.writeFileSync(routerPath, protectedRoute.code());
+  fs.writeFileSync(routerPath, loginRoute.code());
 }
