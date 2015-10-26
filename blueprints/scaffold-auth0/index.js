@@ -20,7 +20,7 @@ function addRouteToRouter(options) {
 
   var routes = new EmberRouterGenerator(source);
   var protectedRoute = routes.add('protected', options);
-  var loginRoute = routes.add('protected', options);
+  var loginRoute = routes.add('login', options);
 
   fs.writeFileSync(routerPath, protectedRoute.code());
   fs.writeFileSync(routerPath, loginRoute.code());
