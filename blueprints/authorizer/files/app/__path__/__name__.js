@@ -1,27 +1,32 @@
 import Ember from 'ember';
-import Base from 'simple-auth/authorizers/base';
+import BaseAuthorizer from 'ember-simple-auth/authorizers/base';
+const { isEmpty } = Ember;
 
-export default Base.extend({
-  authorize: function(jqXHR, requestOptions) {
+export default BaseAuthorizer.extend({
+  authorize: function(sessionData, block) {
+    const tokenAttributeName = 'jwt';
+    const userToken = sessionData[tokenAttributeName];
+    if (!isEmpty(userToken)) {
 
-    var secureData = this.get('session.secure');
+      // Set request headers here.
+      // userToken is the jwt from Auth0.
 
-    if (this.get('session.isAuthenticated') && !Ember.isEmpty(secureData.jwt)) {
-      
-      //Set request headers here.
-      //secureData.jwt is the jwt from Auth0.
-      
-      //Example usage
-      //jqXHR.setRequestHeader('Authorization', 'Bearer ' + secureData.jwt);
-      
-      //Remember to update your config/environment.js
-      //ENV['simple-auth'] = {
-      //  ...
-      //  authorizer: 'authenticator:my-cool-authenticator',
-      //  ...
-      //}
+      // Example usage
+      // block('Authorization', `Bearer ${userToken}`);
 
+      // Remember to update your session service's authorize method (http://ember-simple-auth.com/api/classes/SessionService.html#method_authorize)
+      // this.get('session').authorize('authorizer:my-cool-authenticator', (headerName, headerValue) => {
+      //   ...
+      // });
+
+      // Alternatively if using Ember Data, update your use DataAdapterMixing provided by Ember Simple Auth (http://ember-simple-auth.com/api/classes/DataAdapterMixin.html)
+      // 
+      // import DS from 'ember-data';
+      // import DataAdapterMixin from 'ember-simple-auth/mixins/data-adapter-mixin';
+
+      // export default DS.JSONAPIAdapter.extend(DataAdapterMixin, {
+      //   authorizer: 'authorizer:my-cool-authenticator'
+      // });
     }
-
   }
 });
