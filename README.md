@@ -43,7 +43,6 @@ There are two configuration options.
 ```js
 // config/environment.js
 ENV['simple-auth'] = {
-  authorizer: 'simple-auth-authorizer:jwt',
   authenticationRoute: 'index',
   routeAfterAuthentication: 'protected',
   routeIfAlreadyAuthenticated: 'protected'
@@ -257,37 +256,41 @@ This will generate the following authorizer.
 // app/authorizers/my-cool-authorizer.js
 
 import Ember from 'ember';
-import Base from 'simple-auth/authorizers/base';
+import BaseAuthorizer from 'ember-simple-auth/authorizers/base';
+const { isEmpty } = Ember;
 
-export default Base.extend({
-  authorize: function(jqXHR, requestOptions) {
+export default BaseAuthorizer.extend({
+  authorize: function(sessionData, block) {
+    const tokenAttributeName = 'jwt';
+    const userToken = sessionData[tokenAttributeName];
+    if (!isEmpty(userToken)) {
 
-    var secureData = this.get('session.secure');
-
-    if (this.get('session.isAuthenticated') && !Ember.isEmpty(secureData.jwt)) {
       // Set request headers here.
-      // secureData.jwt is the jwt from Auth0.
+      // userToken is the jwt from Auth0.
+      
+      // Example usage
+      // block('Authorization', `Bearer ${userToken}`);
+      
+      // Remember to update your session service's authorize method (http://ember-simple-auth.com/api/classes/SessionService.html#method_authorize)
+      // this.get('session').authorize('authorizer:my-cool-authenticator', (headerName, headerValue) => {
+      //   ...
+      // });
+
+      // Alternatively if using Ember Data, update your use DataAdapterMixing provided by Ember Simple Auth (http://ember-simple-auth.com/api/classes/DataAdapterMixin.html)
       // 
-      // jqXHR.setRequestHeader('Authorization', 'Bearer ' + secureData.jwt);
+      // import DS from 'ember-data';
+      // import DataAdapterMixin from 'ember-simple-auth/mixins/data-adapter-mixin';
 
+      // export default DS.JSONAPIAdapter.extend(DataAdapterMixin, {
+      //   authorizer: 'authorizer:my-cool-authenticator'
+      // });
     }
-
   }
 });
 
 ```
 
-To use the new authorizer, just update your config as follows:
-
-```js
-// config/environment.js
-ENV['simple-auth'] = {
-  ...
-  authorizer: 'authorizer:my-cool-authorizer',
-  ...
-}
-
-```
+To use the new authorizer, just update your session service's authorize method or your adapter if using Ember Data, as described [here](https://github.com/simplabs/ember-simple-auth#implementing-a-custom-authorizer).
 
 Remember, you will also need to update your crossOriginWhitelist if you are making cross domain requests. If not, ember simple auth will not trigger the authorizer's ```authorize``` method.
 
