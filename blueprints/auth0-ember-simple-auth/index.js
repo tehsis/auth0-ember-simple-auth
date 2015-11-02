@@ -4,9 +4,8 @@ module.exports = {
 
   afterInstall: function() {
     return this.addBowerPackagesToProject([
-      { name: 'ember-simple-auth',      target: '0.8.0'  },
-      { name: 'auth0-lock',             target: '~7.7.1'  },
-      { name: 'jsrsasign',              target: '~4.8.3'  }
+      { name: 'auth0-lock',             target: '^7.10.2'  },
+      { name: 'jsrsasign',              target: '^5.0.1'  }
     ]);
   }
 };
