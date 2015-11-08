@@ -24,7 +24,7 @@ If you don't already have an account, go signup at for free: [Auth0](https://aut
 ember new hello-safe-world
 cd hello-safe-world
 ember install ember-simple-auth
-npm install git+https://git@github.com/auth0/auth0-ember-simple-auth.git
+npm install --save git+https://git@github.com/auth0/auth0-ember-simple-auth.git
 ember g auth0-ember-simple-auth
 ```
 
@@ -50,7 +50,15 @@ There are two configuration options.
 
 *The below simple-auth config object works out the box with the scaffold*
 
-### (`ember-simple-auth` > 0.8.0)
+```js
+// config/environment.js
+ENV['auth0-ember-simple-auth'] = {
+  clientID: "auth0_client_id",
+  domain: "auth0_domain"
+};
+```
+
+### (`ember` >= 2.x.x)
 ```js
 // config/environment.js
 ENV['ember-simple-auth'] = {
@@ -60,21 +68,13 @@ ENV['ember-simple-auth'] = {
 };
 ```
 
-### (`ember-simple-auth` < 1.0.0)
+### (`ember` <= 1.13.x)
 ```js
 // config/environment.js
 ENV['simple-auth'] = {
   authenticationRoute: 'index',
   routeAfterAuthentication: 'protected',
   routeIfAlreadyAuthenticated: 'protected'
-};
-```
-
-```js
-// config/environment.js
-ENV['auth0-ember-simple-auth'] = {
-  clientID: "auth0_client_id",
-  domain: "auth0_domain"
 };
 ```
 
