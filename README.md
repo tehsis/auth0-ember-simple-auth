@@ -19,10 +19,20 @@ If you don't already have an account, go signup at for free: [Auth0](https://aut
 
 ### Generate a new ember app and install `auth0-ember-simple-auth` using ember-cli (Ember CLI >= 0.2.7)
 
+### (`ember` >= 2.x.x)
 ```bash
 ember new hello-safe-world
 cd hello-safe-world
-ember install auth0-ember-simple-auth
+ember install ember-simple-auth
+npm install git+https://git@github.com/auth0/auth0-ember-simple-auth.git
+ember g auth0-ember-simple-auth
+```
+
+### (`ember` <= 1.13.x)
+```bash
+ember new hello-safe-world
+cd hello-safe-world
+ember install auth0-ember-simple-auth@1.0.4
 ```
 
 If you want to get up and running right away, you can scaffold all the necessary routes and templates to play with:
@@ -40,18 +50,32 @@ There are two configuration options.
 
 *The below simple-auth config object works out the box with the scaffold*
 
+### (`ember-simple-auth` > 0.8.0)
+```js
+// config/environment.js
+ENV['ember-simple-auth'] = {
+  authenticationRoute: 'index',
+  routeAfterAuthentication: 'protected',
+  routeIfAlreadyAuthenticated: 'protected'
+};
+```
+
+### (`ember-simple-auth` < 1.0.0)
 ```js
 // config/environment.js
 ENV['simple-auth'] = {
   authenticationRoute: 'index',
   routeAfterAuthentication: 'protected',
   routeIfAlreadyAuthenticated: 'protected'
-}
+};
+```
 
+```js
+// config/environment.js
 ENV['auth0-ember-simple-auth'] = {
   clientID: "auth0_client_id",
   domain: "auth0_domain"
-}
+};
 ```
 
 Lastly, make sure you update the *Allowed Callback URLs* through your Auth0 dashboard.
@@ -97,6 +121,7 @@ Once the standard [Ember Simple Auth](https://github.com/simplabs/ember-simple-a
 
 __Here is an example application route:__
 
+### (`ember` <= 1.13.x)
 ```js
 // app/routes/application.js
 
@@ -118,8 +143,31 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
 });
 ```
 
+### (`ember` >= 2.x.x)
+```js
+// app/routes/application.js
+
+import Ember from 'ember';
+import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
+
+export default Ember.Route.extend(ApplicationRouteMixin, {
+
+  actions: {
+    login () {
+      var lockOptions = {authParams:{scope: 'openid'}};
+      this.get('session').authenticate('simple-auth-authenticator:lock', lockOptions);
+    },
+
+    logout () {
+      this.get('session').invalidate();
+    }
+  }
+});
+```
+
 __Then from your template you could trigger the usual actions:__
 
+### (`ember` <= 1.13.x)
 ```html
 // app/templates/application.hbs
 
@@ -127,6 +175,17 @@ __Then from your template you could trigger the usual actions:__
   <a {{ action 'invalidateSession' }}>Logout</a>
 {{else}}
   <a {{ action 'sessionRequiresAuthentication' }}>Login</a>
+{{/if}}
+```
+
+### (`ember` >= 2.x.x)
+```html
+// app/templates/application.hbs
+
+{{#if session.isAuthenticated}}
+  <a {{ action 'logout' }}>Logout</a>
+{{else}}
+  <a {{ action 'login' }}>Login</a>
 {{/if}}
 ```
 
@@ -160,7 +219,7 @@ export default Base.extend({
    *
    * @return {Promise}
    */
-  beforeExpire: function(){
+  beforeExpire () {
     return Ember.RSVP.resolve();
   },
 
@@ -177,7 +236,7 @@ export default Base.extend({
    * @param  {Object} data Session object
    * @return {Promise}     Promise with decorated session object
    */
-  afterAuth: function(data){
+  afterAuth (data) {
     return Ember.RSVP.resolve(data);
   },
 
@@ -194,7 +253,7 @@ export default Base.extend({
    * @param  {Object} data The new jwt
    * @return {Promise}     The decorated session object
    */
-  afterRestore: function(data){
+  afterRestore (data) {
     return Ember.RSVP.resolve(data);
   },
 
@@ -212,7 +271,7 @@ export default Base.extend({
    * @param  {Object} data Session object
    * @return {Promise}     Promise with decorated session object
    */
-  afterRefresh: function(data){
+  afterRefresh (data) {
     return Ember.RSVP.resolve(data);
   }
 
@@ -222,18 +281,42 @@ export default Base.extend({
 
 Once you've made your custom authenticator. Just do the following in your app route:
 
+### (`ember` <= 1.13.x)
 ```js
 import Ember from 'ember';
 import ApplicationRouteMixin from 'simple-auth/mixins/application-route-mixin';
 
 export default Ember.Route.extend(ApplicationRouteMixin, {
   actions: {
-    sessionRequiresAuthentication: function(){
+    sessionRequiresAuthentication () {
       // Check out the docs for all the options:
       // https://auth0.com/docs/libraries/lock/customization
 
       var lockOptions = {authParams:{scope: 'openid'}};
       this.get('session').authenticate('authenticator:my-cool-authenticator', lockOptions);
+    }
+  }
+});
+
+```
+
+### (`ember` >= 2.x.x)
+```js
+import Ember from 'ember';
+import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
+
+export default Ember.Route.extend(ApplicationRouteMixin, {
+  actions: {
+    login () {
+      // Check out the docs for all the options:
+      // https://auth0.com/docs/libraries/lock/customization
+
+      var lockOptions = {authParams:{scope: 'openid'}};
+      this.get('session').authenticate('authenticator:my-cool-authenticator', lockOptions);
+    },
+
+    logout () {
+      this.get('session').invalidate();
     }
   }
 });
@@ -267,17 +350,17 @@ export default BaseAuthorizer.extend({
 
       // Set request headers here.
       // userToken is the jwt from Auth0.
-      
+
       // Example usage
       // block('Authorization', `Bearer ${userToken}`);
-      
+
       // Remember to update your session service's authorize method (http://ember-simple-auth.com/api/classes/SessionService.html#method_authorize)
       // this.get('session').authorize('authorizer:my-cool-authenticator', (headerName, headerValue) => {
       //   ...
       // });
 
       // Alternatively if using Ember Data, update your use DataAdapterMixing provided by Ember Simple Auth (http://ember-simple-auth.com/api/classes/DataAdapterMixin.html)
-      // 
+      //
       // import DS from 'ember-data';
       // import DataAdapterMixin from 'ember-simple-auth/mixins/data-adapter-mixin';
 

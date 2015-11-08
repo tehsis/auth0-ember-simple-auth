@@ -1,27 +1,28 @@
-var EmberRouterGenerator = require('ember-router-generator');
-var path        = require('path');
-var fs          = require('fs-extra');
+var EmberRouterGenerator = require('ember-router-generator'),
+    path                 = require('path'),
+    fs                   = require('fs-extra');
 
 module.exports = {
   normalizeEntityName: function() {},
 
   afterInstall: function(options) {
-   addRouteToRouter({
+   addRoutesToRouter({
       root: options.project.root,
       path: options.path
     });
   }
-
 };
 
-function addRouteToRouter(options) {
+function addRoutesToRouter(options) {
+  addRouteToRouter('login', options);
+  addRouteToRouter('protected', options);
+};
+
+function addRouteToRouter (route, options) {
   var routerPath = path.join(options.root, 'app', 'router.js');
   var source = fs.readFileSync(routerPath, 'utf-8');
-
   var routes = new EmberRouterGenerator(source);
-  var protectedRoute = routes.add('protected', options);
-  var loginRoute = routes.add('login', options);
+  var newRoute = routes.add(route, options);
 
-  fs.writeFileSync(routerPath, protectedRoute.code());
-  fs.writeFileSync(routerPath, loginRoute.code());
+  fs.writeFileSync(routerPath, newRoute.code());
 }

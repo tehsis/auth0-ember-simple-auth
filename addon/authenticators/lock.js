@@ -2,8 +2,8 @@
 import Ember from 'ember';
 import BaseAuthenticator from 'ember-simple-auth/authenticators/base';
 
-var read = Ember.computed.readOnly;
-var bool = Ember.computed.bool;
+var read = Ember.computed.readOnly,
+    bool = Ember.computed.bool;
 
 export default BaseAuthenticator.extend({
 
@@ -108,7 +108,7 @@ export default BaseAuthenticator.extend({
    *
    * @return {Promise}
    */
-  beforeExpire: function(){
+  beforeExpire () {
     return Ember.RSVP.resolve();
   },
 
@@ -125,7 +125,7 @@ export default BaseAuthenticator.extend({
    * @param  {Object} data Session object
    * @return {Promise}     Promise with decorated session object
    */
-  afterAuth: function(data){
+  afterAuth (data) {
     return Ember.RSVP.resolve(data);
   },
 
@@ -142,7 +142,7 @@ export default BaseAuthenticator.extend({
    * @param  {Object} data The new jwt
    * @return {Promise}     The decorated session object
    */
-  afterRestore: function(data){
+  afterRestore (data) {
     return Ember.RSVP.resolve(data);
   },
 
@@ -160,13 +160,12 @@ export default BaseAuthenticator.extend({
    * @param  {Object} data Session object
    * @return {Promise}     Promise with decorated session object
    */
-  afterRefresh: function(data){
+  afterRefresh (data){
     return Ember.RSVP.resolve(data);
   },
 
-  restore: function(data) {
+  restore (data) {
     this.get('sessionData').setProperties(data);
-    var self = this;
 
     if(this._jwtRemainingTime() < 1){
       if(this.get('hasRefreshToken')){
@@ -176,54 +175,45 @@ export default BaseAuthenticator.extend({
       }
     }else{
       return this.afterRestore(this.get('sessionData'))
-            .then(function(response){
-              return Ember.RSVP.resolve(self._setupFutureEvents(response));
-            });
+        .then(response => Ember.RSVP.resolve(this._setupFutureEvents(response)));
     }
   },
 
-  authenticate: function(options) {
-    var self = this;
-    return new Ember.RSVP.Promise(function(resolve, reject) {
-      self.get('lock').show(options, function(err, profile, jwt, accessToken, state, refreshToken) {
-        if(err){
-          reject(err);
-        }else{
-          var sessionData = {
-            profile:profile,
-            jwt:jwt,
-            accessToken:accessToken,
-            refreshToken:refreshToken
-          };
-
-          self.afterAuth(sessionData)
-          .then(function(response){
-            resolve(self._setupFutureEvents(response));
-          });
+  authenticate (options) {
+    return new Ember.RSVP.Promise((res, rej) => {
+      this.get('lock').show(options, (err, profile, jwt, accessToken, state, refreshToken) => {
+        if (err) {
+          rej(err);
+        } else {
+          var sessionData = { profile, jwt, accessToken, refreshToken };
+          this.afterAuth(sessionData).then(response => res(this._setupFutureEvents(response)));
         }
       });
     });
   },
 
-  invalidate: function(/* data */) {
-    var self = this;
-    if(this.get('hasRefreshToken')){
-      var url = 'https://'+this.get('domain')+'/api/users/'+this.get('userID')+'/refresh_tokens/'+this.get('refreshToken');
-      return this._makeAuth0Request(url, "DELETE").then(function(){
-        return self.beforeExpire();
+  invalidate (/* data */) {
+    if (this.get('hasRefreshToken')) {
+      var domain = this.get('domain'),
+          userID = this.get('userID'),
+          refreshToken = this.get('refreshToken'),
+          url = `https://${domain}/api/users/${userID}/refresh_tokens/${refreshToken}`;
+
+      return this._makeAuth0Request(url, "DELETE").then(() => {
+        return this.beforeExpire();
       });
-    }else{
-      return self.beforeExpire();
+    } else {
+      return this.beforeExpire();
     }
   },
 
   //=======================
   // Overrides
   //=======================
-  init: function() {
+  init () {
     var applicationConfig = this.container.lookupFactory('config:environment');
-
     var config = applicationConfig['auth0-ember-simple-auth'];
+
     this.set('_config', config);
 
     this.set('_sessionData', Ember.Object.create());
@@ -233,34 +223,31 @@ export default BaseAuthenticator.extend({
 
     var lock = new Auth0Lock(this.get('clientID'), this.get('domain'));
     this.set('_lock', lock);
+
+    this._super();
   },
 
   //=======================
   // Private Methods
   //=======================
-  _makeAuth0Request: function(url, method){
+  _makeAuth0Request (url, method) {
     var headers = {'Authorization':'Bearer ' + this.get('jwt')};
     return Ember.$.ajax(url, {type:method, headers:headers});
   },
 
-  _setupFutureEvents: function(data){
+  _setupFutureEvents (data) {
     this.get('sessionData').setProperties(data);
-
-    // Just got a new lease on life so let's clear all old jobs
     this._clearJobs();
-
-    // Death comes to all of us, setup the expiration
     this._scheduleExpire();
 
-    // There is hope, if a refresh token exists, we may just find immortality
-    if(this.get('hasRefreshToken')){
+    if (this.get('hasRefreshToken')) {
       this._scheduleRefresh();
     }
 
     return this.get('sessionData');
   },
 
-  _scheduleRefresh: function(){
+  _scheduleRefresh () {
     Ember.run.cancel(this.get('_refreshJob'));
 
     var remaining = this._jwtRemainingTime();
@@ -274,59 +261,52 @@ export default BaseAuthenticator.extend({
     }
   },
 
-  _scheduleExpire: function(){
+  _scheduleExpire () {
     Ember.run.cancel(this.get('_expireJob'));
     var expireInMilli = this._jwtRemainingTime()*1000;
     var job = Ember.run.later(this, this._processSessionExpired, expireInMilli);
     this.set('_expireJob', job);
   },
 
-  _clearJobs: function(){
+  _clearJobs () {
     Ember.run.cancel(this.get('_expireJob'));
     Ember.run.cancel(this.get('_refreshJob'));
   },
 
-  _processSessionExpired: function(){
-    var self = this;
-    this.beforeExpire()
-    .then(function(){
-      self.trigger('sessionDataInvalidated');
-    });
+  _processSessionExpired () {
+    this.beforeExpire().then(() => this.trigger('sessionDataInvalidated'));
   },
 
-  _refreshAuth0Token: function(){
-    var self = this;
-    return new Ember.RSVP.Promise(function(resolve, reject) {
-      self.get('lock').getClient().refreshToken(self.get('refreshToken'), function (err, result) {
-        if(err){
-          reject(err);
-        }else{
-          self.afterRefresh({jwt:result.id_token})
-          .then(function(response){
-            resolve(self._setupFutureEvents(response));
-          });
-        }
+  _refreshAuth0Token () {
+    return new Ember.RSVP.Promise((res, rej) => {
+      this.get('lock').getClient()
+        .refreshToken(this.get('refreshToken'), (err, result) => {
+          if(err){
+            rej(err);
+          }else{
+            this.afterRefresh({jwt:result.id_token})
+            .then(response => {
+              res(this._setupFutureEvents(response));
+            });
+          }
       });
     });
   },
 
-  _refreshAccessToken:function(){
-    var self = this;
-    this._refreshAuth0Token().then(function(data){
-      self.trigger('sessionDataUpdated', data);
-    });
+  _refreshAccessToken () {
+    this._refreshAuth0Token().then(data => this.trigger('sessionDataUpdated', data));
   },
 
   //=======================
   // Utility Methods
   //=======================
-  _extractExpireTime: function(jwt){
+  _extractExpireTime (jwt) {
     var claim = b64utos(jwt.split(".")[1]);
     var decoded = KJUR.jws.JWS.readSafeJSONString(claim);
     return decoded.exp;
   },
 
-  _jwtRemainingTime: function(){
+  _jwtRemainingTime () {
     if(this.get('expiresIn') <= 0){
       return 0;
     }else{
@@ -334,5 +314,4 @@ export default BaseAuthenticator.extend({
       return this.get('expiresIn') - currentTime;
     }
   }
-
 });
