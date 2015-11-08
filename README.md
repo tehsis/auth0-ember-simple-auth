@@ -15,7 +15,8 @@ Auth0's [lock](https://github.com/auth0/lock) widget, is a nice way to get a ful
 If you don't already have an account, go signup at for free: [Auth0](https://auth0.com/)
 
 1. Create a new app through your dashboard.
-2. Done!
+1. Add `http://localhost:4200` to your Allowed Callback URLs through your dashboard
+1. Done!
 
 ### Generate a new ember app and install `auth0-ember-simple-auth` using ember-cli (Ember CLI >= 0.2.7)
 
