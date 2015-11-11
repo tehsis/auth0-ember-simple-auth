@@ -48,7 +48,8 @@
     "lock.js"
   ],
   "dependencies": {
-    "ember-cli-babel": "^5.1.3"
+    "ember-cli-babel": "^5.1.3",
+    "ember-router-generator": "^1.1.1"
   },
   "ember-addon": {
     "configPath": "tests/dummy/config"
