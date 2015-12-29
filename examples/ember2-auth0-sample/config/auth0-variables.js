@@ -1,5 +1,5 @@
-var AUTH0_CLIENT_ID='KIsD2IkiQ98TnxtOI1Rk6FCqYNyse4DC';
-var AUTH0_DOMAIN='annytechaid.auth0.com';
+var AUTH0_CLIENT_ID='{CLIENT_ID}';
+var AUTH0_DOMAIN='{DOMAIN}';
 
 module.exports = {
   AUTH0_CLIENT_ID: AUTH0_CLIENT_ID,
