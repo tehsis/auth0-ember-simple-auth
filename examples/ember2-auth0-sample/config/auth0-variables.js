@@ -1,0 +1,7 @@
+var AUTH0_CLIENT_ID='KIsD2IkiQ98TnxtOI1Rk6FCqYNyse4DC';
+var AUTH0_DOMAIN='annytechaid.auth0.com';
+
+module.exports = {
+  AUTH0_CLIENT_ID: AUTH0_CLIENT_ID,
+  AUTH0_DOMAIN: AUTH0_DOMAIN
+}
