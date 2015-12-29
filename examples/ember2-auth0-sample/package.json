@@ -1,7 +1,7 @@
 {
   "name": "ember2-auth0-sample",
-  "version": "0.0.0",
-  "description": "Small description for ember2-auth0-sample goes here",
+  "version": "1.0.0",
+  "description": "Auth0 + Ember 2 simple auth seed",
   "private": true,
   "directories": {
     "doc": "doc",
