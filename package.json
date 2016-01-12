@@ -11,6 +11,8 @@
     "build": "ember build",
     "test": "ember try:testall"
   },
+  "author": "Auth0",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git://github.com/auth0/auth0-ember-simple-auth"

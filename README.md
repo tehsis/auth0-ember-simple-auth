@@ -382,8 +382,14 @@ Remember, you will also need to update your crossOriginWhitelist if you are maki
 
 Written by @brancusi (Aram Zadikian), maintained in part by Auth0. Thanks Aram!
 
+## Issue Reporting
+
+If you have found a bug or if you have a feature request, please report them at this repository issues section. Please do not report security vulnerabilities on the public GitHub issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
+
+## Author
+
+[Auth0](auth0.com)
+
 ## License
 
-auth0-ember-simple-auth by Aram Zadikian. It is released under the MIT License.
-
-__Enjoy!__
+This project is licensed under the MIT license. See the [LICENSE](LICENSE) file for more info.
