@@ -144,6 +144,18 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
 });
 ```
 
+__Add the session service to your application controller:__
+
+```js
+import Ember from 'ember';
+
+const {inject} = Ember;
+
+export default Ember.Controller.extend({
+  session: inject.service()
+});
+```
+
 ### (`ember` >= 2.x.x)
 ```js
 // app/routes/application.js
@@ -163,6 +175,18 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
       this.get('session').invalidate();
     }
   }
+});
+```
+
+__Add the session service to your application controller:__
+
+```js
+import Ember from 'ember';
+
+const {inject} = Ember;
+
+export default Ember.Controller.extend({
+  session: inject.service()
 });
 ```
 
