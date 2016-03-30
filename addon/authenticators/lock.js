@@ -1,6 +1,7 @@
 /* globals Auth0Lock, b64utos, KJUR */
 import Ember from 'ember';
 import BaseAuthenticator from 'ember-simple-auth/authenticators/base';
+import getOwner from 'ember-getowner-polyfill';
 
 var read = Ember.computed.readOnly,
     bool = Ember.computed.bool;
@@ -211,7 +212,7 @@ export default BaseAuthenticator.extend({
   // Overrides
   //=======================
   init () {
-    var applicationConfig = this.container.lookupFactory('config:environment');
+    var applicationConfig = getOwner(this).resolveRegistration('config:environment');
     var config = applicationConfig['auth0-ember-simple-auth'];
 
     this.set('_config', config);
