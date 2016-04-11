@@ -164,6 +164,17 @@ export default BaseAuthenticator.extend({
   afterRefresh (data){
     return Ember.RSVP.resolve(data);
   },
+  /**
+   * Hook that gets called after Auth0 fails authentication for any reason.
+   *
+   *
+   *
+   * @param  {Error}  error object
+   * @return {Promise}     Promise
+   */
+  onAuthError(/* error */){
+    return new Ember.RSVP.Promise();
+  },
 
   restore (data) {
     this.get('sessionData').setProperties(data);
@@ -181,10 +192,10 @@ export default BaseAuthenticator.extend({
   },
 
   authenticate (options) {
-    return new Ember.RSVP.Promise((res, rej) => {
+    return new Ember.RSVP.Promise((res) => {
       this.get('lock').show(options, (err, profile, jwt, accessToken, state, refreshToken) => {
         if (err) {
-          rej(err);
+          this.onAuthError(err);
         } else {
           var sessionData = { profile, jwt, accessToken, refreshToken };
           this.afterAuth(sessionData).then(response => res(this._setupFutureEvents(response)));
