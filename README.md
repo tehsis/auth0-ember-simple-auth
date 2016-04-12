@@ -18,22 +18,20 @@ If you don't already have an account, go signup at for free: [Auth0](https://aut
 1. Add `http://localhost:4200` to your Allowed Callback URLs through your dashboard
 1. Done!
 
-### Generate a new ember app and install `auth0-ember-simple-auth` using ember-cli (Ember CLI >= 0.2.7)
+#### Generate a new ember app and install `auth0-ember-simple-auth` using ember-cli (Ember CLI >= 0.2.7)
 
-### (`ember` >= 2.x.x)
+#### (`ember` >= 2.x.x)
 ```bash
 ember new hello-safe-world
 cd hello-safe-world
-ember install ember-simple-auth
-npm install --save git+https://git@github.com/auth0/auth0-ember-simple-auth.git
-ember g auth0-ember-simple-auth
+ember install auth0/auth0-ember-simple-auth
 ```
 
-### (`ember` <= 1.13.x)
+#### (`ember` <= 1.13.x)
 ```bash
 ember new hello-safe-world
 cd hello-safe-world
-ember install auth0-ember-simple-auth@1.0.4
+ember install auth0/auth0-ember-simple-auth#1.0.4
 ```
 
 If you want to get up and running right away, you can scaffold all the necessary routes and templates to play with:
@@ -69,7 +67,7 @@ ENV['ember-simple-auth'] = {
 };
 ```
 
-### (`ember` <= 1.13.x)
+#### (`ember` <= 1.13.x)
 ```js
 // config/environment.js
 ENV['simple-auth'] = {
@@ -122,7 +120,7 @@ Once the standard [Ember Simple Auth](https://github.com/simplabs/ember-simple-a
 
 __Here is an example application route:__
 
-### (`ember` <= 1.13.x)
+#### (`ember` <= 1.13.x)
 ```js
 // app/routes/application.js
 
@@ -156,7 +154,7 @@ export default Ember.Controller.extend({
 });
 ```
 
-### (`ember` >= 2.x.x)
+#### (`ember` >= 2.x.x)
 ```js
 // app/routes/application.js
 
@@ -192,7 +190,7 @@ export default Ember.Controller.extend({
 
 __Then from your template you could trigger the usual actions:__
 
-### (`ember` <= 1.13.x)
+#### (`ember` <= 1.13.x)
 ```html
 // app/templates/application.hbs
 
@@ -203,7 +201,7 @@ __Then from your template you could trigger the usual actions:__
 {{/if}}
 ```
 
-### (`ember` >= 2.x.x)
+#### (`ember` >= 2.x.x)
 ```html
 // app/templates/application.hbs
 
@@ -306,7 +304,7 @@ export default Base.extend({
 
 Once you've made your custom authenticator. Just do the following in your app route:
 
-### (`ember` <= 1.13.x)
+#### (`ember` <= 1.13.x)
 ```js
 import Ember from 'ember';
 import ApplicationRouteMixin from 'simple-auth/mixins/application-route-mixin';
@@ -325,7 +323,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
 
 ```
 
-### (`ember` >= 2.x.x)
+#### (`ember` >= 2.x.x)
 ```js
 import Ember from 'ember';
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
