@@ -24,6 +24,7 @@ If you don't already have an account, go signup at for free: [Auth0](https://aut
 ```bash
 ember new hello-safe-world
 cd hello-safe-world
+ember install ember-simple-auth
 ember install auth0/auth0-ember-simple-auth
 ```
 
