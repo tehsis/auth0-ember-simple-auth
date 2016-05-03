@@ -4,6 +4,7 @@ This is the seed project to get you started with an ember 2 application that use
 
 ## Running the example
 
+* Set your Auth0 client ID and domain in `config/auth0-variables.js`
 * Install node
 * Install bower
 * Install ember-cli (`npm i -g ember-cli`)
